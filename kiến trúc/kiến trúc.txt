@@ -1,0 +1,61 @@
+graph TD
+  %% Định nghĩa các lớp (Layers)
+  subgraph Client_Layer [Tầng Người dùng]
+    Web(Web Application - React/Angular)
+    Mobile(Mobile App - Flutter/React Native)
+  end
+
+  subgraph Gateway_Layer [Tầng Điều hướng]
+    AGW[API Gateway - Spring Cloud Gateway]
+    Eureka[Service Discovery - Netflix Eureka]
+  end
+
+  subgraph Service_Layer [Tầng Vi dịch vụ - Spring Boot]
+    US[User Service]
+    CS[Chat Service]
+    NS[Notification Service]
+    FS[File Service]
+  end
+
+  subgraph Messaging_Layer [Tầng Truyền tin Bất đồng bộ]
+    Kafka((Apache Kafka Broker))
+  end
+
+  subgraph Persistence_Layer [Tầng Dữ liệu & Lưu trữ]
+    MySQL[(MySQL Database)]
+    MongoDB[(MongoDB NoSQL)]
+    MinIO[(MinIO Object Storage)]
+  end
+
+  %% Các luồng kết nối
+  Web & Mobile -->|HTTP/REST| AGW
+  AGW -->|Routing| US
+  AGW -->|Routing| CS
+  AGW -->|Routing| NS
+  AGW -->|Routing| FS
+
+  %% Đăng ký dịch vụ
+  US & CS & NS & FS -.->|Register| Eureka
+
+  %% Kết nối Cơ sở dữ liệu
+  US --->|Relational Data| MySQL
+  CS --->|Chat Logs| MongoDB
+  NS --->|Noti History| MongoDB
+  FS --->|Metadata| MongoDB
+  FS --->|Object Store| MinIO
+
+  %% Luồng sự kiện Kafka
+  US -.->|Produce/Consume| Kafka
+  CS -.->|Produce/Consume| Kafka
+  NS -.->|Consume Events| Kafka
+  FS -.->|Produce Events| Kafka
+
+  %% Giao tiếp nội bộ gRPC
+  CS == gRPC ==> FS
+
+  %% Định dạng màu sắc
+  style Client_Layer fill:#f9f,stroke:#333,stroke-width:2px
+  style Gateway_Layer fill:#bbf,stroke:#333,stroke-width:2px
+  style Service_Layer fill:#dfd,stroke:#333,stroke-width:2px
+  style Messaging_Layer fill:#fff4dd,stroke:#d4a017,stroke-width:2px
+  style Persistence_Layer fill:#fdd,stroke:#333,stroke-width:2px
