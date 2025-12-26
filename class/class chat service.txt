@@ -1,0 +1,29 @@
+classDiagram
+    class Conversation {
+        +UUID convoId
+        +String title
+        +ConversationType type
+        +LocalDateTime createdAt
+        +addMember()
+        +removeMember()
+    }
+
+    class Message {
+        +ObjectId messageId
+        +UUID convoId
+        +Long senderId
+        +String content
+        +MessageType type
+        +LocalDateTime sentAt
+        +Boolean isRead
+    }
+
+    class ConversationMember {
+        +Long userId
+        +UUID convoId
+        +RoleInGroup role
+        +LocalDateTime joinedAt
+    }
+
+    Conversation "1" -- "0..*" Message : contains
+    Conversation "1" -- "0..*" ConversationMember : has_participants

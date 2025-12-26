@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    actor C as Người dân
+    participant AGW as API Gateway
+    participant US as User Service
+    participant DB as MySQL Database
+
+    C->>AGW: GET /lawyers?spec=HinhSu&bar=HaNoi
+    AGW->>US: Forward Request
+    US->>DB: Query: JOIN Lawyers + Specializations
+    DB-->>US: List<LawyerEntity>
+    US->>US: Map to LawyerResponse DTO
+    US-->>AGW: JSON Data
+    AGW-->>C: Hiển thị danh sách luật sư

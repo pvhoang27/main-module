@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor L as Luật sư
+    participant AGW as API Gateway
+    participant US as User Service (MySQL)
+    participant FS as File Service (MinIO)
+    participant K as Kafka Broker
+    participant NS as Notification Service
+    actor A as Quản trị viên
+
+    L->>AGW: POST /lawyers/register (Data + Image)
+    AGW->>FS: Upload Chứng chỉ (gRPC/REST)
+    FS-->>AGW: File_ID & URL
+    AGW->>US: Chuyển yêu cầu đăng ký + File_ID
+    US->>US: Lưu hồ sơ (Status: PENDING)
+    US-->>K: Publish Event: "Lawyer_Registered"
+    K-->>NS: Consume Event
+    NS-->>A: Đẩy thông báo duyệt qua WebSocket
+    
+    Note over A, US: Quá trình phê duyệt
+    A->>AGW: PUT /admin/lawyers/{id}/approve
+    AGW->>US: Cập nhật trạng thái
+    US->>US: Update Status: APPROVED
+    US-->>K: Publish Event: "Lawyer_Approved"
+    K-->>NS: Consume Event
+    NS-->>L: Thông báo "Hồ sơ đã được duyệt" (Real-time)

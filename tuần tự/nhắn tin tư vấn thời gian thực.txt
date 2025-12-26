@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    actor C as Người dân
+    participant AGW as API Gateway
+    participant CS as Chat Service (MongoDB)
+    participant K as Kafka Broker
+    participant NS as Notification Service
+    actor L as Luật sư
+
+    C->>AGW: Gửi tin nhắn qua WebSocket (STOMP)
+    AGW->>CS: Xử lý nội dung tin nhắn
+    CS->>CS: Lưu tin nhắn vào MongoDB
+    CS-->>C: Trả về trạng thái "Đã gửi"
+    
+    par Phát tán tin nhắn
+        CS-->>L: Đẩy tin nhắn qua WebSocket (nếu online)
+    and Thông báo ngoài luồng
+        CS-->>K: Publish Event: "New_Message"
+        K-->>NS: Consume Event
+        NS->>L: Gửi Push Notification (nếu offline)
+    end

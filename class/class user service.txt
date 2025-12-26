@@ -1,0 +1,42 @@
+classDiagram
+    class User {
+        +Long userId
+        +String fullName
+        +String email
+        +String passwordHash
+        +String phoneNumber
+        +Boolean isActive
+        +LocalDateTime createdAt
+    }
+
+    class Role {
+        +Integer roleId
+        +String roleName
+    }
+
+    class Lawyer {
+        +Long lawyerId
+        +String barLicenseId
+        +String bio
+        +String officeAddress
+        +Integer yearsOfExp
+        +VerificationStatus verificationStatus
+        +approve()
+        +reject()
+    }
+
+    class BarAssociation {
+        +Integer barAssociationId
+        +String associationName
+        +String contactEmail
+    }
+
+    class Specialization {
+        +Integer specId
+        +String specName
+    }
+
+    User "1" -- "0..*" Role : has (via UserRole)
+    User "1" -- "0..1" Lawyer : is_a
+    Lawyer "0..*" -- "1" BarAssociation : belongs_to
+    Lawyer "0..*" -- "0..*" Specialization : practices (via LawyerSpec)

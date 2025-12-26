@@ -1,0 +1,65 @@
+erDiagram
+    USERS ||--o{ USER_ROLES : has
+    ROLES ||--o{ USER_ROLES : defines
+    USERS ||--o| LAWYERS : "is a"
+    BAR_ASSOCIATIONS ||--o{ LAWYERS : belongs_to
+    LAWYERS ||--o{ LAWYER_SPECIALIZATIONS : has
+    SPECIALIZATIONS ||--o{ LAWYER_SPECIALIZATIONS : defines
+    
+    USERS ||--o{ CONVERSATION_PARTICIPANTS : participates
+    CONVERSATIONS ||--o{ CONVERSATION_PARTICIPANTS : contains
+    CONVERSATIONS ||--o{ MESSAGES : "has many"
+    USERS ||--o{ MESSAGES : sends
+    
+    USERS ||--o{ REVIEWS : writes
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ CHATBOT_HISTORY : interacts
+    USERS ||--o{ FORUM_POSTS : creates
+
+    USERS {
+        int user_id PK
+        string full_name
+        string email
+        string password_hash
+        string phone_number
+        string avatar_url
+        string address
+        datetime created_at
+        boolean is_active
+    }
+
+    LAWYERS {
+        int lawyer_id PK, FK
+        string bar_license_id
+        text bio
+        string certificate_image_url
+        int years_of_exp
+        string verification_status
+        int bar_association_id FK
+    }
+
+    ROLES {
+        int role_id PK
+        string role_name
+    }
+
+    CONVERSATIONS {
+        int convo_id PK
+        string type
+        datetime created_at
+    }
+
+    MESSAGES {
+        bigint message_id PK
+        int convo_id FK
+        int sender_id FK
+        text content
+        datetime sent_at
+    }
+
+    REVIEWS {
+        int review_id PK
+        int created_by_user_id FK
+        int rating_stars
+        text comment
+    }
