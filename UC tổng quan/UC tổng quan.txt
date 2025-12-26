@@ -1,0 +1,74 @@
+graph LR
+    %% ===== Actor (dùng emoji để export không bị mất icon) =====
+    Citizen["👤 <br/> Người dân"]
+    Lawyer["🧑‍⚖️ <br/> Luật sư"]
+    Admin["🛡️ <br/> Quản trị viên"]
+
+    subgraph "Hệ thống LegalSystem"
+        direction TB
+
+        %% ===== Use Case: Người dân =====
+        UC01([UC-01: Đăng ký & Đăng nhập])
+        UC02([UC-02: Cập nhật hồ sơ])
+        UC03([UC-03: Tìm kiếm luật sư])
+        UC04([UC-04: Nhắn tin tư vấn])
+        UC05([UC-05: Gửi tệp tài liệu])
+        UC06([UC-06: Đánh giá luật sư])
+
+        %% ===== Use Case: Luật sư =====
+        UC07([UC-07: Đăng ký hồ sơ chuyên môn])
+        UC08([UC-08: Cập nhật hành nghề])
+        UC09([UC-09: Tiếp nhận tư vấn])
+        UC10([UC-10: Quản lý tệp tin])
+
+        %% ===== Use Case: Quản trị viên =====
+        UC11([UC-11: Phê duyệt luật sư])
+        UC12([UC-12: Quản lý Chuyên môn])
+        UC13([UC-13: Quản lý Đoàn LS])
+        UC14([UC-14: Quản lý người dùng])
+    end
+
+    %% ===== Kết nối Actor - Use Case =====
+    Citizen --- UC01
+    Citizen --- UC02
+    Citizen --- UC03
+    Citizen --- UC04
+    Citizen --- UC06
+
+    Lawyer --- UC01
+    Lawyer --- UC07
+    Lawyer --- UC08
+    Lawyer --- UC09
+    Lawyer --- UC10
+
+    Admin --- UC11
+    Admin --- UC12
+    Admin --- UC13
+    Admin --- UC14
+
+    %% ===== Quan hệ Include / Extend =====
+    UC04 -.->|extend| UC05
+    UC07 -.->|include| UC11
+    UC09 --- UC04
+
+    %% ===== Style (giống UML) =====
+    style Citizen fill:none,stroke:none,font-weight:bold
+    style Lawyer fill:none,stroke:none,font-weight:bold
+    style Admin fill:none,stroke:none,font-weight:bold
+
+    style UC01 fill:#fff,stroke:#333
+    style UC02 fill:#fff,stroke:#333
+    style UC03 fill:#fff,stroke:#333
+    style UC04 fill:#e1f5fe,stroke:#01579b
+    style UC05 fill:#fff,stroke:#333
+    style UC06 fill:#fff,stroke:#333
+
+    style UC07 fill:#fff,stroke:#333
+    style UC08 fill:#fff,stroke:#333
+    style UC09 fill:#fff,stroke:#333
+    style UC10 fill:#fff,stroke:#333
+
+    style UC11 fill:#fff,stroke:#333
+    style UC12 fill:#fff,stroke:#333
+    style UC13 fill:#fff,stroke:#333
+    style UC14 fill:#fff,stroke:#333
